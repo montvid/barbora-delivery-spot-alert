@@ -17,6 +17,9 @@ if platform.system().lower().startswith('win'):
 elif platform.system().lower().startswith('dar'):
     import os
     PLATFORM = "MAC"
+elif platform.system().lower().startswith('lin'):
+    import os
+    PLATFORM = "LINUX"
 
 BEEP_FREQUENCY = 1000
 BEEP_DURATION = 1000
@@ -91,11 +94,11 @@ def scrape_and_alarm(headers_path):
                     winsound.Beep(BEEP_FREQUENCY, BEEP_DURATION)
                 elif PLATFORM == "MAC":
                     os.system('say "Open slots found"')
+                elif PLATFORM == "LINUX":
+                    # Beep for Linux ALSA using alsa-utils. With sox use "play -q -n synth 1 sine 1000 vol 0.1"
+                    os.system("speaker-test -t sine -f 1000 -l 1 & sleep .9 && kill -9 $!")
             except Exception as _:
-                # No beep for windows
-                # Beep for Linux ALSA
-                import os
-                os.system("speaker-test -t sine -f 1000 -l 1 & sleep .9 && kill -9 $!")
+                # No beep for windows              
                 pass
 
         logger.info(
